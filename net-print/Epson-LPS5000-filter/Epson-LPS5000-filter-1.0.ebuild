@@ -16,6 +16,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND="net-print/cups
+        app-text/psutils
         sys-libs/libstdc++-v3"
 
 RDEPEND="${DEPEND}"
