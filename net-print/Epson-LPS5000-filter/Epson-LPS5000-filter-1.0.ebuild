@@ -16,6 +16,11 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND="net-print/cups
+        app-text/ghostscript-gpl
+		sys-apps/sed
+		sys-apps/grep
+		sys-apps/gawk
+		sys-devel/bc
         app-text/psutils
         sys-libs/libstdc++-v3"
 
