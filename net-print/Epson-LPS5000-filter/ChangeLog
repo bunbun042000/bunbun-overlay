@@ -1,0 +1,8 @@
+# ChangeLog for net-print/Epson-LPS5000-filter
+# Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*Epson-LPS5000-filter-1.0 (26 May 2014)
+
+  26 May 2014; YAMAGATA Fumihiro <bunbun042000@gmail.com> +Epson-LPS5000-filter-1.0.ebuild, +ChangeLog, +metadata.xml :
+  Initial import.

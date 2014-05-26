@@ -1,0 +1,12 @@
+diff -Nur Epson-LPS5000-filter-1.0.orig/pstolps5000.sh Epson-LPS5000-filter-1.0/pstolps5000.sh
+--- Epson-LPS5000-filter-1.0.orig/pstolps5000.sh	2014-05-26 09:55:35.365575777 +0900
++++ Epson-LPS5000-filter-1.0/pstolps5000.sh	2014-05-26 09:57:03.594989129 +0900
+@@ -209,7 +209,7 @@
+ msglog "collatefile=$collatefile"
+ msglog "numcopies=$numcopies"
+ 
+-rotator="" && test "$useRotator" = "on" && rotator="| pstops -q $pstops1 $pstops2"
++rotator="" && test "$useRotator" = "on" && rotator="| /usr/bin/pstops -q $pstops1 $pstops2"
+ rasterizer="| gs -q -dBATCH -dPARANOIDSAFER -dNOPAUSE $gs1 $gs2 -sOutputFile=- -"
+ escpagesfilter="| lps5000 $opt" && test "$PSOUT" = "on" && escpagesfilter=""
+ 

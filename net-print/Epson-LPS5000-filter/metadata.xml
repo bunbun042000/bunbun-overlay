@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>printing</herd>
+<maintainer><email>bunbun042000@gmail.com</email></maintainer>
+<longdescription>
+EPSON LP-S5000 printer driver
+</longdescription>
+</pkgmetadata>
