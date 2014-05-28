@@ -158,12 +158,12 @@ src_prepare() {
 # you only need to call it, if you need different behaviour.
 # For EAPI < 4 src_install is just returing true, so you need to always specify
 # this function in older EAPIs.
-#src_install() {
+src_install() {
 	# You must *personally verify* that this trick doesn't install
 	# anything outside of DESTDIR; do this by reading and
 	# understanding the install part of the Makefiles.
 	# This is the preferred way to install.
-	#emake DESTDIR="${D}" install || die
+	emake DESTDIR="${D}" install || die
 
 	# When you hit a failure with emake, do not just use make. It is
 	# better to fix the Makefiles to allow proper parallelization.
@@ -186,4 +186,4 @@ src_prepare() {
 	# The portage shortcut to the above command is simply:
 	#
 	#einstall || die
-#}
+}
