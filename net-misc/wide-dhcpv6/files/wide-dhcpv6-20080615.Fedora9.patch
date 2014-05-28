@@ -1,0 +1,49 @@
+diff -ur --unidirectional-new-file wide-dhcpv6-20080615/dhcp6c.c wide-dhcpv6-20080615-Fedora9/dhcp6c.c
+--- wide-dhcpv6-20080615/dhcp6c.c	2008-06-15 16:48:41.000000000 +0900
++++ wide-dhcpv6-20080615-Fedora9/dhcp6c.c	2008-09-13 23:49:08.000000000 +0900
+@@ -50,6 +50,7 @@
+ #endif
+ 
+ #include <netinet/in.h>
++#include "linux-ipv6.h"         // shida, 2008.9.13
+ #ifdef __KAME__
+ #include <net/if_dl.h>
+ #include <netinet6/in6_var.h>
+diff -ur --unidirectional-new-file wide-dhcpv6-20080615/dhcp6relay.c wide-dhcpv6-20080615-Fedora9/dhcp6relay.c
+--- wide-dhcpv6-20080615/dhcp6relay.c	2008-06-15 16:48:41.000000000 +0900
++++ wide-dhcpv6-20080615-Fedora9/dhcp6relay.c	2008-09-13 23:52:16.000000000 +0900
+@@ -40,6 +40,7 @@
+ #endif
+ 
+ #include <netinet/in.h>
++#include "linux-ipv6.h"
+ 
+ #ifdef __KAME__
+ #include <netinet6/in6_var.h>
+diff -ur --unidirectional-new-file wide-dhcpv6-20080615/dhcp6s.c wide-dhcpv6-20080615-Fedora9/dhcp6s.c
+--- wide-dhcpv6-20080615/dhcp6s.c	2008-06-15 16:51:57.000000000 +0900
++++ wide-dhcpv6-20080615-Fedora9/dhcp6s.c	2008-09-13 23:51:36.000000000 +0900
+@@ -51,6 +51,7 @@
+ #endif
+ 
+ #include <netinet/in.h>
++#include "linux-ipv6.h"
+ #ifdef __KAME__
+ #include <netinet6/in6_var.h>
+ #endif
+diff -ur --unidirectional-new-file wide-dhcpv6-20080615/linux-ipv6.h wide-dhcpv6-20080615-Fedora9/linux-ipv6.h
+--- wide-dhcpv6-20080615/linux-ipv6.h	1970-01-01 09:00:00.000000000 +0900
++++ wide-dhcpv6-20080615-Fedora9/linux-ipv6.h	2008-09-13 23:47:54.000000000 +0900
+@@ -0,0 +1,12 @@
++#ifndef _LINUX_IPV6_H
++#define _LINUX_IPV6_H 1
++
++/* IPv6 packet information.  */
++struct in6_pktinfo
++  {
++    struct in6_addr ipi6_addr;  /* src/dst IPv6 address */
++    unsigned int ipi6_ifindex;  /* send/recv interface index */
++  };
++
++#endif
++

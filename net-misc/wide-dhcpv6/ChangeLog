@@ -1,0 +1,8 @@
+# ChangeLog for net-misc/wide-dhcpv6
+# Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*wide-dhcpv6-20080615 (29 May 2014)
+
+  29 May 2014; YAMAGATA Fumihiro <bunbun042000@gmail.com> +ChangeLog, +metadata.xml, +wide-dhcpv6-20080615.ebuild :
+  Initial import.
