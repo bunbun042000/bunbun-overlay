@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>xnp2</herd>
+<maintainer>
+	<email>bunbun042000@gmail.com</email>
+<description>Yamagata Fumihiro</description>
+</maintainer>
+<longdescription>Xnp2 is ported to Unix-like OS from Neko-Project II. Originaly Neko-Project II is an i286 CPU's NEC PC-9801 emulator written by Pnyu.</longdescription>
+<use>
+</use>
+</pkgmetadata>

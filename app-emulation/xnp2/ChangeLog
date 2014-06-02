@@ -1,0 +1,8 @@
+# ChangeLog for app-emulation/xnp2
+# Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*xnp2-20140531 (02 Jun 2014)
+
+  02 Jun 2014; Yamagata Fumihiro <bunbun042000@gmail.com> +xnp2-20140531.ebuild, +ChangeLog, +metadata.xml:
+  Initial import. 
