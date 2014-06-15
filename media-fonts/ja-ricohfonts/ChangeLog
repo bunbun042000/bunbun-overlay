@@ -1,0 +1,8 @@
+# ChangeLog for media-fonts/ja-ricohfonts
+# Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*ja-ricohfonts-1.0 (16 Jun 2014)
+
+  16 Jun 2014; Yamagata Fumihiro <bunbun042000@gmail.com> +ChangeLog, +metadata.xml, +ja-ricohfonts-1.0.ebuild :
+  Initial import. 
