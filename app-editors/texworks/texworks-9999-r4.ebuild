@@ -20,6 +20,7 @@ DEPEND="
 	>=dev-qt/qtcore-4.5:4
 	app-text/poppler[qt4]
 	dev-qt/designer
+	dev-qt/qtdbus
 	>=app-text/hunspell-1.2.2"
 RDEPEND="${DEPEND}"
 
