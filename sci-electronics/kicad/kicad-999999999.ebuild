@@ -64,10 +64,10 @@ src_unpack() {
 }
 
 src_prepare() {
-	if use python;then
-		# dev-python/wxpython don't support python3
-		sed '/set(_PYTHON3_VERSIONS 3.3 3.2 3.1 3.0)/d' -i CMakeModules/FindPythonLibs.cmake || die "sed failed"
-	fi
+#	if use python;then
+#		# dev-python/wxpython don't support python3
+#		sed '/set(_PYTHON3_VERSIONS 3.3 3.2 3.1 3.0)/d' -i CMakeModules/FindPythonLibs.cmake || die "sed failed"
+#	fi
 
 	if use doc;then
 		for lang in ${LANGS};do
