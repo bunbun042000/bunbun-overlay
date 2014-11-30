@@ -7,8 +7,8 @@ EAPI=4
 MY_P="${P}-1lsb3.2"
 
 DESCRIPTION="Epson Inkjet Printer Driver (ESC/P-R) for Linux"
-HOMEPAGE="http://avasys.jp/eng/linux_driver/download/lsb/epson-inkjet/escpr/"
-SRC_URI="http://linux.avasys.jp/drivers/lsb/epson-inkjet/escpr/src/${MY_P}.tar.gz"
+HOMEPAGE="http://download.ebz.epson.net/dsc/search/01/search/"
+SRC_URI="file://${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -17,3 +17,10 @@ IUSE=""
 
 DEPEND="net-print/cups"
 RDEPEND="${DEPEND}"
+
+pkg_nofetch() {
+        einfo "Please download"
+        einfo "  -  ${MY_P}.tar.gz"
+        einfo "from ${HOMEPAGE} and place it in ${DISTDIR}"
+}
+
