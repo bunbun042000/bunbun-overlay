@@ -1,0 +1,37 @@
+# !/bin/bash
+# -*- coding: utf-8-unix -*-
+
+# 音楽CDからWAVEとCUEシート作成
+# ファイル上書きチェックしてないので注意
+
+# CDDB サーバ http://freedbtest.dyndns.org/
+cddb_server="freedbtest.dyndns.org:80:/~cddb/cddbutf8.cgi"
+cd_drive="/dev/sr1"
+
+cdrdao read-cd --device ${1:-${cd_drive}} --with-cddb \
+--cddb-servers "$cddb_server" --datafile CDImage.bin CDImage.toc
+cdparanoia -d ${1:-${cd_drive}} 1- CDImage.wav
+cueconvert -i toc -o cue CDImage.toc CDImage.cue
+
+# printf すると日本語の文字化けが直る
+printf "$(cat CDImage.cue)\n" | sed -e '/^MESSAGE/d' -e '/^$/d' \
+-e 's/CDImage\.bin/CDImage\.wav/g' > CDImage.cue.tmp
+mv CDImage.cue.tmp CDImage.cue
+
+# ファイル名をTITLEと同じにする
+# やっつけ処理で上手くいかないかも
+TITLE=$(grep TITLE CDImage.cue | head -1 | egrep -o '".*"' | \
+sed -e 's/^"//' -e 's/"$//' \
+-e "y@\"\/\<\>\\\*\:\?\|@”／＜＞￥＊：？｜@")
+REALTITLE=`echo "$TITLE" | sed -e 's/ /\_/g'`
+filename=${2:-${REALTITLE}}
+
+if [ "${filename}" ]; then
+	mv CDImage.wav "${filename}".wav
+	TITLE=$(echo -n "${filename}" | sed 's/&/\\\&/g')
+	sed "s/CDImage/${filename}/g" CDImage.cue > "${filename}".cue
+	rm CDImage.bin CDImage.cue CDImage.toc
+else
+	rm CDImage.bin CDImage.toc
+fi
+nkf --windows --utf8 --overwrite "${filename}".cue
