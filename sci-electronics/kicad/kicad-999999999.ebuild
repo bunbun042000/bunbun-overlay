@@ -28,7 +28,7 @@ for lang in ${LANGS}; do
 	IUSE+=" linguas_${lang}"
 done
 
-CDEPEND="x11-libs/wxGTK:${WX_GTK_VER}[X,opengl]
+CDEPEND="x11-libs/wxGTK:${WX_GTK_VER}[X,opengl,webkit]
          dev-python/wxpython:${WX_GTK_VER}
          media-libs/glew"
 DEPEND="${CDEPEND}
