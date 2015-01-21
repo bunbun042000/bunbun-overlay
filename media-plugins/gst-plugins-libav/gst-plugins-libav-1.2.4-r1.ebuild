@@ -19,12 +19,6 @@ RDEPEND="
 	>=media-libs/gstreamer-1.2.3:1.0[${MULTILIB_USEDEP}]
 	>=media-libs/gst-plugins-base-1.2.3:1.0[${MULTILIB_USEDEP}]
 	>=virtual/ffmpeg-9-r1[${MULTILIB_USEDEP}]
-	!libav10? ( 
-		!!>=media-video/libav-10
-	)
-	libav10? (
-		!!<media-video/libav-10
-	)
 	orc? ( >=dev-lang/orc-0.4.17[${MULTILIB_USEDEP}] )
 "
 DEPEND="${RDEPEND}
@@ -46,16 +40,6 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-1.2.4-fix-memory-leak.patch" #494282
 
 	fi
-	if use libav10; then
-		# libav10 patches (trivially ported from Sebastian Dröge <sebastian@centricular.com>'s
-		# submissions) to upstream^2's bugzilla: https://bugzilla.gnome.org/show_bug.cgi?id=719923)
-		epatch "${FILESDIR}/${P}-libav10-01-codecid-avcodecid.patch"
-		epatch "${FILESDIR}/${P}-libav10-02-avenc.patch"
-		epatch "${FILESDIR}/${P}-libav10-03-no-r-frame-rate-field.patch"
-		epatch "${FILESDIR}/${P}-libav10-04-no_AVCODEC_MAX_AUDIO_FRAME_SIZE.patch"
-		epatch "${FILESDIR}/${P}-libav10-05-new_config_interface.patch"
-		epatch "${FILESDIR}/${P}-libav10-06-av_encode_video.patch"
-	fi
 }
 
 multilib_src_configure() {
@@ -67,7 +51,7 @@ multilib_src_configure() {
 		--with-package-name="Gentoo GStreamer ebuild" \
 		--with-package-origin="http://www.gentoo.org" \
 		--disable-fatal-warnings \
-		--with-system-libav \
+	#	--with-system-libav \
 		$(use_enable orc)
 }
 
