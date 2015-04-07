@@ -8,6 +8,6 @@
 	<owner>
 		<email>bunbun042000@gmail.com</email>
 	</owner>
-	<source type="git">git@github.com:bunbun042000/bunbun-overlay.git</source>
+	<source type="git">https://github.com/bunbun042000/bunbun-overlay.git</source>
 </repo>
 </repositories>
