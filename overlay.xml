@@ -4,10 +4,10 @@
 <repo priority="50" quality="experimental" status="unofficial">
 	<name>bunbun-overlay</name>
 	<description>Custom stuff from bunbun042000.</description>
-	<homepage>https://gitorious.org/bunbun-overlay/</homepage>
+	<homepage>https://github.com/bunbun042000/bunbun-overlay/</homepage>
 	<owner>
 		<email>bunbun042000@gmail.com</email>
 	</owner>
-	<source type="git">git://gitorious.org/bunbun-overlay/bunbun-overlay.git</source>
+	<source type="git">git@github.com:bunbun042000/bunbun-overlay.git</source>
 </repo>
 </repositories>
