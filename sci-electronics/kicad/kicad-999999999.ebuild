@@ -45,7 +45,7 @@ src_unpack() {
 	bzr_src_unpack
 
 	if use doc; then
-		EBZR_REPO_URI="lp:~kicad-developers/kicad/doc" \
+		EBZR_REPO_URI="lp:~kicad-gost-committers/kicad/doc" \
 		EBZR_PROJECT="kicad-doc" \
 		EBZR_UNPACK_DIR="${EBZR_UNPACK_DIR}/kicad-doc" \
 		EBZR_CACHE_DIR="kicad-doc" \
