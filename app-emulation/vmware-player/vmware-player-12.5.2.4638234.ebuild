@@ -137,6 +137,8 @@ RDEPEND="
 		x11-libs/libICE
 		x11-libs/libSM
 		virtual/jpeg:62
+		media-libs/libpng:1.2
+		dev-libs/libgcrypt:11/11
 	)
 	!bundled-libs? ( ${BUNDLED_LIB_DEPENDS} )
 	!app-emulation/vmware-workstation
