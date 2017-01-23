@@ -133,9 +133,9 @@ multilib_src_configure() {
 	# stop it automatically including things
 	local bundled_libs="NONE"
 	if use addc && ! use system-heimdal ; then
-		bundled_libs="heimdal,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE"
+		#bundled_libs="heimdal,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,vers,com_err,NONE"
 		#bundled_libs="heimbase,heimntlm,hdb,kdc,krb5,wind,gssapi,hcrypto,hx509,roken,asn1,com_err,NONE"
-		#bundled_libs="heimdal,NONE"
+		bundled_libs="ALL,!tevent,!talloc"
 	fi
 
 	local myconf=()
