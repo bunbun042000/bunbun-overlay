@@ -135,7 +135,7 @@ multilib_src_configure() {
 	if use addc && ! use system-heimdal ; then
 		#bundled_libs="heimdal,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,vers,com_err,NONE"
 		#bundled_libs="heimbase,heimntlm,hdb,kdc,krb5,wind,gssapi,hcrypto,hx509,roken,asn1,com_err,NONE"
-		bundled_libs="ALL,!tevent,!talloc,!ldb,!tdb"
+		bundled_libs="ALL,!tevent,!talloc,!ldb,!tdb,!pytalloc-util,!popt,!pyldb-util,!zlib"
 	fi
 
 	local myconf=()
