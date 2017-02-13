@@ -1,0 +1,14 @@
+--- vmci-only/linux/vmciKernelIf.c.orig	2017-02-14 00:29:08.050043975 +0900
++++ vmci-only/linux/vmciKernelIf.c	2017-02-14 00:31:01.603761564 +0900
+@@ -1835,7 +1835,11 @@
+       if (dirty) {
+          set_page_dirty(pages[i]);
+       }
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)
++      put_page(pages[i]);
++#else
+       page_cache_release(pages[i]);
++#endif
+       pages[i] = NULL;
+    }
+ }

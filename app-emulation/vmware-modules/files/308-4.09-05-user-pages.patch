@@ -1,0 +1,24 @@
+--- vmci-only/linux/vmciKernelIf.c.orig	2017-02-14 00:20:28.779756636 +0900
++++ vmci-only/linux/vmciKernelIf.c	2017-02-14 00:22:18.345451102 +0900
+@@ -2049,6 +2049,13 @@
+    int err = VMCI_SUCCESS;
+ 
+    down_write(&current->mm->mmap_sem);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)
++   retval = get_user_pages((VA)produceUVA,
++                           produceQ->kernelIf->numPages,
++                           1,
++                           produceQ->kernelIf->u.h.headerPage,
++                           NULL);
++#else
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 6, 0)
+    retval = get_user_pages((VA)produceUVA,
+                            produceQ->kernelIf->numPages,
+@@ -2064,6 +2071,7 @@
+                            produceQ->kernelIf->u.h.headerPage,
+                            NULL);
+ #endif
++#endif
+    if (retval < produceQ->kernelIf->numPages) {
+       Log("get_user_pages(produce) failed (retval=%d)\n", retval);
+       VMCIReleasePages(produceQ->kernelIf->u.h.headerPage, retval, FALSE);

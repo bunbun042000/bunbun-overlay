@@ -1,0 +1,19 @@
+--- vmnet-only/userif.c~	2016-11-12 16:15:55.000000000 +0900
++++ vmnet-only/userif.c	2017-02-09 22:38:33.763659530 +0900
+@@ -113,12 +113,16 @@
+    int retval;
+ 
+    down_read(&current->mm->mmap_sem);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)
++   retval = get_user_pages(addr, 1, FOLL_WRITE, &page, NULL);
++#else
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 6, 0)
+    retval = get_user_pages(addr, 1, 1, 0, &page, NULL);
+ #else
+    retval = get_user_pages(current, current->mm, addr,
+                            1, 1, 0, &page, NULL);
+ #endif
++#endif
+    up_read(&current->mm->mmap_sem);
+ 
+    if (retval != 1) {
