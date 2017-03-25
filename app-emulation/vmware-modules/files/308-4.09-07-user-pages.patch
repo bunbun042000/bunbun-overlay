@@ -1,0 +1,23 @@
+--- vmci-only/linux/vmciKernelIf.c.orig	2017-03-25 02:45:14.961006202 +0900
++++ vmci-only/linux/vmciKernelIf.c	2017-03-25 02:50:24.829763210 +0900
+@@ -2085,15 +2085,19 @@
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 5, 99)
+    retval = get_user_pages((VA)consumeUVA,
++                           consumeQ->kernelIf->numPages,
++                           1, 
++                           consumeQ->kernelIf->u.h.headerPage,
++                           NULL);
+ #else
+    retval = get_user_pages(current,
+                            current->mm,
+                            (VA)consumeUVA,
+-#endif
+                            consumeQ->kernelIf->numPages,
+                            1, 0,
+                            consumeQ->kernelIf->u.h.headerPage,
+                            NULL);
++#endif
+    if (retval < consumeQ->kernelIf->numPages) {
+       Log("get_user_pages(consume) failed (retval=%d)\n", retval);
+       VMCIReleasePages(consumeQ->kernelIf->u.h.headerPage, retval, FALSE);
