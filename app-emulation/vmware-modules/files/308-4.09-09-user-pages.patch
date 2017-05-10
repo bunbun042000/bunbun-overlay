@@ -1,0 +1,52 @@
+--- vmblock-only/linux/inode.c.orig	2017-05-10 22:14:21.952568739 +0900
++++ vmblock-only/linux/inode.c	2017-05-10 22:25:13.749531265 +0900
+@@ -45,7 +45,7 @@
+ #endif
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 99)
+-static const char *InodeOpFollowlink(struct dentry *dentry, struct inode *inode, void **cookie);
++static const char *InodeOpGetLink(struct dentry *dentry, struct inode *inode, struct delayed_call *done);
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+ static const char *InodeOpFollowlink(struct dentry *dentry, void **cookie);
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 13)
+@@ -229,21 +229,19 @@
+  *
+  *----------------------------------------------------------------------------
+  */
+-
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+-static const char *
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 5, 0)
++const char *InodeOpGetLink(struct dentry *dentry, struct inode *inode, struct delayed_call *done)
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
++static const char * 
++InodeOpFollowlink(struct dentry *dentry,  // IN : dentry of symlink
++                  void **cookie)          // OUT: stores opaque pointer
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 13)
+ static void *
++InodeOpFollowlink(struct dentry *dentry,  // IN : dentry of symlink
++                  struct nameidata *nd)   // OUT: stores result
+ #else
+ static int
+-#endif
+ InodeOpFollowlink(struct dentry *dentry,  // IN : dentry of symlink
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 99)
+-                  struct inode *inode,
+-#endif
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+-                  void **cookie)          // OUT: stores opaque pointer
+-#else
+                   struct nameidata *nd)   // OUT: stores result
+ #endif
+ {
+@@ -270,7 +268,9 @@
+       goto out;
+    }
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 5, 0)
++   return (char *)(iinfo->name);
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+    return *cookie = iinfo->name;
+ #else
+    nd_set_link(nd, iinfo->name);

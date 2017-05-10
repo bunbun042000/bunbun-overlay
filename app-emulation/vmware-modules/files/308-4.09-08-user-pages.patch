@@ -1,0 +1,11 @@
+--- vmblock-only/linux/inode.c.orig	2017-05-10 22:05:11.642061792 +0900
++++ vmblock-only/linux/inode.c	2017-05-10 22:06:52.997523946 +0900
+@@ -66,7 +66,7 @@
+ #endif
+    .readlink    = InodeOpReadlink,
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 99)
+-   .get_link = InodeOpFollowlink,
++   .get_link = InodeOpGetLink,
+ #else
+    .follow_link = InodeOpFollowlink,
+ #endif
