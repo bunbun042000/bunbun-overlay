@@ -1,24 +1,61 @@
---- vmci-only/linux/vmciKernelIf.c.orig	2017-02-14 00:05:46.246198690 +0900
-+++ vmci-only/linux/vmciKernelIf.c	2017-02-14 00:09:17.549529283 +0900
-@@ -2071,6 +2071,13 @@
+--- vmblock-only/linux/inode.c.orig	2017-05-16 02:56:12.972770562 +0900
++++ vmblock-only/linux/inode.c	2017-05-16 02:58:13.820017080 +0900
+@@ -45,7 +45,7 @@
+ #endif
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 99)
+-static const char *InodeOpFollowlink(struct dentry *dentry, struct inode *inode, void **cookie);
++static const char *InodeOpGetLink(struct dentry *dentry, struct inode *inode, struct delayed_call *done);
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+ static const char *InodeOpFollowlink(struct dentry *dentry, void **cookie);
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 13)
+@@ -66,7 +66,7 @@
+ #endif
+    .readlink    = InodeOpReadlink,
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 99)
+-   .get_link = InodeOpFollowlink,
++   .get_link = InodeOpGetLink,
+ #else
+    .follow_link = InodeOpFollowlink,
+ #endif
+@@ -229,21 +229,19 @@
+  *
+  *----------------------------------------------------------------------------
+  */
+-
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+-static const char *
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 5, 0)
++const char *InodeOpGetLink(struct dentry *dentry, struct inode *inode, struct delayed_call *done)
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
++static const char * 
++InodeOpFollowlink(struct dentry *dentry,  // IN : dentry of symlink
++                  void **cookie)          // OUT: stores opaque pointer
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 13)
+ static void *
++InodeOpFollowlink(struct dentry *dentry,  // IN : dentry of symlink
++                  struct nameidata *nd)   // OUT: stores result
+ #else
+ static int
+-#endif
+ InodeOpFollowlink(struct dentry *dentry,  // IN : dentry of symlink
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 99)
+-                  struct inode *inode,
+-#endif
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+-                  void **cookie)          // OUT: stores opaque pointer
+-#else
+                   struct nameidata *nd)   // OUT: stores result
+ #endif
+ {
+@@ -270,7 +268,9 @@
        goto out;
     }
  
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)
-+   retval = get_user_pages((VA)produceUVA,
-+                           produceQ->kernelIf->numPages,
-+                           1,
-+                           produceQ->kernelIf->u.h.headerPage,
-+                           NULL);
-+#else
-    retval = get_user_pages(current,
-                            current->mm,
-                            (VA)consumeUVA,
-@@ -2078,6 +2085,7 @@
-                            1, 0,
-                            consumeQ->kernelIf->u.h.headerPage,
-                            NULL);
-+#endif
-    if (retval < consumeQ->kernelIf->numPages) {
-       Log("get_user_pages(consume) failed (retval=%d)\n", retval);
-       VMCIReleasePages(consumeQ->kernelIf->u.h.headerPage, retval, FALSE);
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 5, 0)
++   return (char *)(iinfo->name);
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 99)
+    return *cookie = iinfo->name;
+ #else
+    nd_set_link(nd, iinfo->name);

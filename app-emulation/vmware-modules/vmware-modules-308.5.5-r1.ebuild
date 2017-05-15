@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=5
 
@@ -105,13 +104,15 @@ src_prepare() {
 	kernel_is ge 4 7 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.07-01-readlink_copy.patch"
 	kernel_is ge 4 8 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.08-00-nr_anon_mapped.patch"
 	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-00-user-pages-p1.patch"
-#	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-01-user-pages.patch"
-#	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-02-user-pages.patch"
-#	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-03-user-pages.patch"
-#	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-04-user-pages.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-01-user-pages.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-02-user-pages.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-03-user-pages.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-04-user-pages.patch"
 	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-05-user-pages.patch"
-	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-08-user-pages.patch"
-	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-09-user-pages.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-06-disable_do_once.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-07-disable_do_once.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-08-remove_pci_vendor_id_vmware.patch"
+	kernel_is ge 4 9 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.09-09-alloc_netdev.patch"
 	kernel_is ge 4 10 0 && epatch "${FILESDIR}/${PV_MAJOR}-4.10-00-generic_readlink.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else

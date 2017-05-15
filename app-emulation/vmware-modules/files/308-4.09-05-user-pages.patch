@@ -1,24 +1,11 @@
---- vmci-only/linux/vmciKernelIf.c.orig	2017-02-14 00:20:28.779756636 +0900
-+++ vmci-only/linux/vmciKernelIf.c	2017-02-14 00:22:18.345451102 +0900
-@@ -2049,6 +2049,13 @@
-    int err = VMCI_SUCCESS;
+--- vmnet-only/userif.c~	2017-05-16 02:59:36.462345366 +0900
++++ vmnet-only/userif.c	2017-05-16 03:08:23.817294133 +0900
+@@ -114,7 +114,7 @@
  
-    down_write(&current->mm->mmap_sem);
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)
-+   retval = get_user_pages((VA)produceUVA,
-+                           produceQ->kernelIf->numPages,
-+                           1,
-+                           produceQ->kernelIf->u.h.headerPage,
-+                           NULL);
-+#else
- #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 6, 0)
-    retval = get_user_pages((VA)produceUVA,
-                            produceQ->kernelIf->numPages,
-@@ -2064,6 +2071,7 @@
-                            produceQ->kernelIf->u.h.headerPage,
-                            NULL);
- #endif
-+#endif
-    if (retval < produceQ->kernelIf->numPages) {
-       Log("get_user_pages(produce) failed (retval=%d)\n", retval);
-       VMCIReleasePages(produceQ->kernelIf->u.h.headerPage, retval, FALSE);
+    down_read(&current->mm->mmap_sem);
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)
+-   retval = get_user_pages_remote(addr, 1, FOLL_WRITE, &page, NULL);
++   retval = get_user_pages_remote(current, current->mm, addr, 1, FOLL_WRITE, &page, NULL);
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 6, 0)
+    retval = get_user_pages(addr, 1, 1, 0, &page, NULL);
+ #else
