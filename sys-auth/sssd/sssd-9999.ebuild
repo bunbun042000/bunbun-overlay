@@ -28,7 +28,7 @@ COMMON_DEP="
 	>=sys-libs/pam-0-r1[${MULTILIB_USEDEP}]
 	>=dev-libs/popt-1.16
 	dev-libs/glib:2
-	>=dev-libs/ding-libs-0.2
+	>=dev-libs/ding-libs-0.6.1
 	>=sys-libs/talloc-2.0.7
 	>=sys-libs/tdb-1.2.9
 	>=sys-libs/tevent-0.9.16
@@ -58,7 +58,7 @@ COMMON_DEP="
 	nls? ( >=sys-devel/gettext-0.18 )
 	virtual/libintl
 	netlink? ( dev-libs/libnl:3 )
-	samba? ( >=net-fs/samba-4.10.2[winbind] )
+	samba? ( >=net-fs/samba-4.12.0[winbind] )
 	"
 
 RDEPEND="${COMMON_DEP}
