@@ -2,23 +2,21 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
+EAPI="7"
 PYTHON_COMPAT=( python2_7 )
 
 WX_GTK_VER="3.0"
 
-inherit cmake-utils wxwidgets fdo-mime gnome2-utils bzr python-r1 flag-o-matic
+inherit cmake-utils wxwidgets fdo-mime git-r3 gnome2-utils python-r1 flag-o-matic
 
 DESCRIPTION="Electronic Schematic and PCB design tools."
 HOMEPAGE="http://www.kicad-pcb.org"
 
 LICENSE="GPL-2"
 SLOT="0"
-EBZR_REPO_URI="lp:kicad"
-EBZR_REVISION="${PR#r}"
-[[ "${EBZR_REVISION}" == "0" ]] && EBZR_REVISION=""
+EGIT_REPO_URI="https://gitlab.com/kicad/code/kicad.git"
 
-KEYWORDS=""
+KEYWORDS="~amd64"
 
 IUSE="dev-doc debug doc examples minimal python nanometr gost sexpr github"
 
@@ -42,28 +40,23 @@ RDEPEND="${CDEPEND}
 	!minimal? ( !sci-electronics/kicad-library )"
 
 src_unpack() {
-	bzr_src_unpack
-
+	git-r3_checkout
+	
 	if use doc; then
-		EBZR_REPO_URI="lp:~kicad-gost-committers/kicad/doc" \
-		EBZR_PROJECT="kicad-doc" \
-		EBZR_UNPACK_DIR="${EBZR_UNPACK_DIR}/kicad-doc" \
-		EBZR_CACHE_DIR="kicad-doc" \
-		EBZR_REVISION="" \
-		bzr_fetch
+		EGIT_REPO_URI="https://gitlab.com/kicad/services/kicad-doc.git" \
+		EGIT_CHECKOUT_DIR="${WORKDIR}/${P}/kicad-doc" \
+		git-r3_checkout
 	fi
 
 	if ! use minimal; then
-		EBZR_REPO_URI="lp:~kicad-product-committers/kicad/library" \
-		EBZR_PROJECT="kicad-library" \
-		EBZR_UNPACK_DIR="${EBZR_UNPACK_DIR}/kicad-library" \
-		EBZR_CACHE_DIR="kicad-library" \
-		EBZR_REVISION="" \
-		bzr_fetch
+		EGIT_REPO_URI="https://github.com/KiCad/kicad-library.git" \
+		EGIT_CHECKOUT_DIR="${WORKDIR}/${P}/kicad-library" \
+		git-r3_checkout
 	fi
 }
 
 src_prepare() {
+	eapply_user
 #	if use python;then
 #		# dev-python/wxpython don't support python3
 #		sed '/set(_PYTHON3_VERSIONS 3.3 3.2 3.1 3.0)/d' -i CMakeModules/FindPythonLibs.cmake || die "sed failed"
@@ -79,7 +72,7 @@ src_prepare() {
 		done
 	fi
 	# hack or dev-vcs/bzrtools
-	sed 's|bzr patch -p0|patch -p0 -i|g' -i CMakeModules/download_boost.cmake
+#	sed 's|bzr patch -p0|patch -p0 -i|g' -i CMakeModules/download_boost.cmake
 
 	#fdo
 	sed -e 's/Categories=Development;Electronics$/Categories=Development;Electronics;/' \
@@ -108,31 +101,23 @@ src_prepare() {
 	else
 		sed -e '/add_subdirectory( demos )/d' -i CMakeLists.txt || die "sed failed"
 	fi
+
+	cmake-utils_src_prepare
 }
 
 src_configure() {
-	bzr whoami "anonymous"
+#	bzr whoami "anonymous"
 	if use amd64;then
 		append-cxxflags -fPIC
 	fi
-	need-wxwidgets unicode
+#	need-wxwidgets unicode
 
-	mycmakeargs="${mycmakeargs}
+	local mycmakeargs=(${mycmakeargs}
 		-DKICAD_DOCS=/usr/share/doc/${PF}
-		-DKICAD_HELP=/usr/share/doc/${PF}
-		-DKICAD_CYRILLIC=ON
-		-DwxUSE_UNICODE=ON
-		-DKICAD_TESTING_VERSION=ON
-		-DKICAD_MINIZIP=OFF
-		-DKICAD_AUIMANAGER=OFF
-		-DKICAD_AUITOOLBAR=OFF
-		$(cmake-utils_use gost KICAD_GOST)
-		$(cmake-utils_use nanometr USE_PCBNEW_NANOMETRES)
-		$(cmake-utils_use sexpr USE_PCBNEW_SEXPR_FILE_FORMAT)
-		$(cmake-utils_use github BUILD_GITHUB_PLUGIN)
-		$(cmake-utils_use python KICAD_SCRIPTING)
-		$(cmake-utils_use python KICAD_SCRIPTING_MODULES)
-		$(cmake-utils_use python KICAD_SCRIPTING_WXPYTHON)"
+		-DBUILD_GITHUB_PLUGIN="$(usex github)"
+		-DKICAD_SCRIPTING="$(usex python)"
+		-DKICAD_SCRIPTING_MODULES="$(usex python)"
+		-DKICAD_SCRIPTING_WXPYTHON="$(usex python)")
 	cmake-utils_src_configure
 }
 
