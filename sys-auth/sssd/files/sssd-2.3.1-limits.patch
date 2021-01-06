@@ -1,0 +1,10 @@
+--- sssd-2.3.1/src/p11_child/p11_child_openssl.c.orig	2020-12-22 22:16:26.664215067 +0900
++++ sssd-2.3.1/src/p11_child/p11_child_openssl.c	2020-12-22 22:16:59.397917991 +0900
+@@ -38,6 +38,7 @@
+ #include "util/crypto/sss_crypto.h"
+ #include "util/child_common.h"
+ #include "p11_child/p11_child.h"
++#include <limits.h>
+ 
+ struct p11_ctx {
+     X509_STORE *x509_store;

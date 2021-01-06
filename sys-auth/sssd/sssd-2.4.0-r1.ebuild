@@ -3,22 +3,34 @@
 
 EAPI=7
 
-inherit autotools flag-o-matic linux-info multilib-minimal pam systemd toolchain-funcs
 
 DESCRIPTION="System Security Services Daemon provides access to identity and authentication"
-HOMEPAGE="https://pagure.io/SSSD/sssd"
-SRC_URI="http://releases.pagure.org/SSSD/${PN}/${P}.tar.gz"
+HOMEPAGE="https://github.com/SSSD/sssd"
+
+if [[ ${PV} != 9999* ]] ; then
+inherit autotools flag-o-matic linux-info multilib-minimal pam systemd toolchain-funcs
+	SRC_URI="https://github.com/SSSD/sssd/releases/download/${PN}-${PV//./_}/${P}.tar.gz"
+    SLOT="0"
+else
+inherit autotools flag-o-matic linux-info multilib-minimal pam systemd toolchain-funcs git-r3
+    EGIT_REPO_URI="https://pagure.io/SSSD/sssd.git"
+
+    SLOT="0"
+    MY_P=${PN}-9999
+fi
+
 KEYWORDS="~amd64 ~arm ~arm64 ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
 
 LICENSE="GPL-3"
-SLOT="0"
 IUSE="acl autofs +locator +netlink nfsv4 nls +manpages samba selinux sudo ssh test"
+RESTRICT="!test? ( test )"
 
 COMMON_DEP="
 	>=sys-libs/pam-0-r1[${MULTILIB_USEDEP}]
 	>=dev-libs/popt-1.16
 	dev-libs/glib:2
-	>=dev-libs/ding-libs-0.2
+	>=app-crypt/p11-kit-0.23.22
+	>=dev-libs/ding-libs-0.6.1
 	>=sys-libs/talloc-2.0.7
 	>=sys-libs/tdb-1.2.9
 	>=sys-libs/tevent-0.9.16
@@ -48,7 +60,7 @@ COMMON_DEP="
 	nls? ( >=sys-devel/gettext-0.18 )
 	virtual/libintl
 	netlink? ( dev-libs/libnl:3 )
-	samba? ( >=net-fs/samba-4.10.2[winbind] )
+	samba? ( >=net-fs/samba-4.12.0[winbind] )
 	"
 
 RDEPEND="${COMMON_DEP}
@@ -61,6 +73,12 @@ DEPEND="${COMMON_DEP}
 		>=dev-libs/libxslt-1.1.26
 		app-text/docbook-xml-dtd:4.4
 		)"
+
+PATCHES=(
+        "${FILESDIR}"/sssd-2.4.0-limits.patch
+        "${FILESDIR}"/sssd-2.4.0-limits2.patch
+        "${FILESDIR}"/sssd-2.4.0-libressl.patch
+)
 
 CONFIG_CHECK="~KEYS"
 
@@ -112,7 +130,6 @@ multilib_src_configure() {
 		--with-nscd
 		--with-unicode-lib="glib2"
 		--disable-rpath
-		--disable-silent-rules
 		--sbindir=/usr/sbin
 		--without-kcm
 		$(use_with samba libwbclient)
@@ -139,7 +156,7 @@ multilib_src_configure() {
 
 	if use samba ; then
 	   myconf+=(
-		--with-smb-idmap-interface-version=5
+		--with-smb-idmap-interface-version=6
 	)
 	fi
 

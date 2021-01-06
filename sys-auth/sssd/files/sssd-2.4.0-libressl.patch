@@ -1,0 +1,18 @@
+--- sssd-2.4.0/src/lib/certmap/sss_cert_content_crypto.c.orig	2020-12-29 22:52:36.474486241 +0900
++++ sssd-2.4.0/src/lib/certmap/sss_cert_content_crypto.c	2020-12-29 22:56:02.400070633 +0900
+@@ -771,8 +771,15 @@
+         ret = EIO;
+         goto done;
+     }
++#ifndef LIBRESSL_VERSION_NUMBER
+     if ((X509_get_extension_flags(cert) & EXFLAG_KUSAGE)) {
+         cont->key_usage = X509_get_key_usage(cert);
++#else
++    X509_check_purpose(cert, -1, -1);
++    if (cert->ex_flags & EXFLAG_KUSAGE) {
++    	cont->key_usage = (cert->ex_flags & EXFLAG_KUSAGE) ?
++	                  cert->ex_kusage : UINT32_MAX;
++#endif
+     } else {
+         /* According to X.509 https://www.itu.int/rec/T-REC-X.509-201610-I
+          * section 13.3.2 "Certificate match" "keyUsage matches if all of the

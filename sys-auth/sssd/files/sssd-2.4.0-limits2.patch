@@ -1,0 +1,10 @@
+--- sssd-2.4.0/src/p11_child/p11_child_openssl.c.orig	2020-12-29 22:43:23.728285154 +0900
++++ sssd-2.4.0/src/p11_child/p11_child_openssl.c	2020-12-29 22:43:49.175236913 +0900
+@@ -31,6 +31,7 @@
+ #include <openssl/ocsp.h>
+ #include <p11-kit/p11-kit.h>
+ #include <p11-kit/uri.h>
++#include <limits.h>
+ 
+ #include <popt.h>
+ 

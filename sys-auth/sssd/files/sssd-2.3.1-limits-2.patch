@@ -1,0 +1,10 @@
+--- sssd-2.3.1/src/util/crypto/libcrypto/crypto_hmac_sha1.c.orig	2020-12-22 22:35:27.463680955 +0900
++++ sssd-2.3.1/src/util/crypto/libcrypto/crypto_hmac_sha1.c	2020-12-22 22:36:48.594585396 +0900
+@@ -17,6 +17,7 @@
+ 
+ #include <string.h>
+ #include <openssl/hmac.h>
++#include <limits.h>
+ 
+ #include "util/util.h"
+ #include "util/crypto/sss_crypto.h"
