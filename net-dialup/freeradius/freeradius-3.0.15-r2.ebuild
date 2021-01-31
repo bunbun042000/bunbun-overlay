@@ -3,7 +3,7 @@
 
 EAPI=6
 
-PYTHON_COMPAT=( python2_7 )
+PYTHON_COMPAT=( python3_8 )
 inherit autotools pam python-single-r1 systemd user
 
 MY_P="${PN}-server-${PV}"
