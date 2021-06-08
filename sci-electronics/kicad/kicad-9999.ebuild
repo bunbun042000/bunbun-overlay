@@ -4,7 +4,7 @@
 
 EAPI="7"
 
-PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_COMPAT=( python3_{7,8,9} )
 
 WX_GTK_VER="3.0-gtk3"
 
@@ -107,8 +107,8 @@ src_prepare() {
 #	sed 's|bzr patch -p0|patch -p0 -i|g' -i CMakeModules/download_boost.cmake
 
 	#fdo
-	sed -e 's/Categories=Development;Electronics$/Categories=Development;Electronics;/' \
-		-i resources/linux/mime/applications/*.desktop || die 'sed failed'
+#	sed -e 's/Categories=Development;Electronics$/Categories=Development;Electronics;/' \
+#		-i resources/linux/mime/applications/*.desktop || die 'sed failed'
 
 	# Add important doc files
 	sed -e 's/INSTALL.txt/AUTHORS.txt CHANGELOG.txt README.txt TODO.txt/' -i CMakeLists.txt || die "sed failed"
