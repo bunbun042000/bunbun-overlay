@@ -1,0 +1,50 @@
+--- boost_1_77_0/boost/math/special_functions/detail/bernoulli_details.hpp.orig	2021-12-04 12:29:21.126292446 -0000
++++ boost_1_77_0/boost/math/special_functions/detail/bernoulli_details.hpp	2021-12-04 12:32:13.012088196 -0000
+@@ -209,8 +209,10 @@
+ {
+ public:
+    bernoulli_numbers_cache() : m_overflow_limit((std::numeric_limits<std::size_t>::max)())
++#if defined(BOOST_HAS_THREADS) && !defined(BOOST_MATH_NO_ATOMIC_INT)
+       , m_counter(0)
+       , m_current_precision(boost::math::tools::digits<T>())
++#endif
+    {}
+ 
+    typedef fixed_vector<T> container_type;
+@@ -360,7 +362,7 @@
+          return out;
+       }
+ 
+-      #ifndef BOOST_HAS_THREADS
++#if !defined(BOOST_HAS_THREADS) || defined(BOOST_MATH_NO_ATOMIC_INT)
+       //
+       // Single threaded code, very simple:
+       //
+@@ -464,7 +466,7 @@
+          return out;
+       }
+ 
+-      #ifndef BOOST_HAS_THREADS
++#if !defined(BOOST_HAS_THREADS) || defined(BOOST_MATH_NO_ATOMIC_INT)
+       //
+       // Single threaded code, very simple:
+       //
+@@ -557,7 +559,18 @@
+ 
+    #ifdef BOOST_HAS_THREADS
+    std::mutex m_mutex;
++       #if ATOMIC_INT_LOCK_FREE == 2
+    atomic_counter_type m_counter, m_current_precision;
++       #elif ATOMIC_SHORT_LOCK_FREE == 2
++   atomic_counter_type m_counter, m_current_precision;
++       #elif ATOMIC_LONG_LOCK_FREE == 2
++   atomic_unsigned_integer_type m_counter, m_current_precision;
++       #elif ATOMIC_LLONG_LOCK_FREE == 2
++   atomic_unsigned_integer_type m_counter, m_current_precision;
++       #else
++   int m_counter;
++   int m_current_precision;
++       #endif
+    #else
+    int m_counter;
+    int m_current_precision;
