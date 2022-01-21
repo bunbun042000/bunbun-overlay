@@ -17,7 +17,7 @@ LICENSE="GPL-2"
 SLOT="0"
 EGIT_REPO_URI="https://gitlab.com/kicad/code/kicad.git"
 
-KEYWORDS="~amd64"
+#KEYWORDS="*"
 
 IUSE="doc examples github +ngspice occ +oce openmp +python"
 
@@ -68,7 +68,7 @@ pkg_setup() {
 src_unpack() {
 	git-r3_fetch
 	git-r3_checkout
-	
+
 	if use doc; then
 		EGIT_REPO_URI="https://gitlab.com/kicad/services/kicad-doc.git" \
 		EGIT_CHECKOUT_DIR="${WORKDIR}/${P}/kicad-doc" \
