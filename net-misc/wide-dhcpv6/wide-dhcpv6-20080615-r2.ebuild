@@ -29,10 +29,9 @@ DEPEND=""
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-     eapply ${PATCHES[@]}
-     eapply_user
+	default
 }
 
 src_install() {
-	einstall || die "einstall failed"
+	emake prefix="${D}/usr" mandir="${D}/usr/share/man" install
 }
