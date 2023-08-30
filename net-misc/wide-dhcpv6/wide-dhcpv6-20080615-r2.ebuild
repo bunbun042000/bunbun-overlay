@@ -4,7 +4,6 @@
 
 EAPI=7
 
-inherit eutils
 
 DESCRIPTION="WIDE-DHCPv6 is an open-source implementation of DHCP for IPv6"
 
