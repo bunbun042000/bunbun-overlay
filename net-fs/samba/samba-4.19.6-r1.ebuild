@@ -304,7 +304,7 @@ multilib_src_configure() {
 
 	append-cppflags "-I${ESYSROOT}/usr/include/et"
 
-	if [[ ${ARCH} == "arm" ]]; then
+	if [[ ${ARCH} == "arm" || ${ARCH} == "ppc" ]]; then
 		append-ldflags "-latomic"
 	fi
 
