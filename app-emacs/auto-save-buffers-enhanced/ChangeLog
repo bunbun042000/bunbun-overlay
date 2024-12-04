@@ -1,8 +1,0 @@
-# ChangeLog for app-emacs/yatex
-# Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/app-emacs/yatex/ChangeLog,v 1.45 2013/08/07 13:26:32 ago Exp $
-
-*auto-save-buffers-enhanced-0.10 (23 Dec 2014)
-
-  23 Dec 2014; Yamagata Fumihiro <bunbun042000@gmail.com> +auto-save-buffers-enhanced-0.10.build:
-  Initial ebuild.
