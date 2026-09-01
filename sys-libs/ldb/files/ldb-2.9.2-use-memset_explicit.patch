@@ -1,0 +1,11 @@
+--- ldb-2.9.0/lib/replace/replace.c.orig	2026-09-01 15:06:24.608562076 +0900
++++ ldb-2.9.0/lib/replace/replace.c	2026-09-01 15:07:47.348081591 +0900
+@@ -970,7 +970,7 @@
+ 	}
+ 
+ #if defined(HAVE_MEMSET_EXPLICIT)
+-	memset_explicit(dest, destsz, ch, count);
++	memset_explicit(dest, ch, count);
+ #else /* HAVE_MEMSET_EXPLICIT */
+ 	memset(dest, ch, count);
+ # if defined(HAVE_GCC_VOLATILE_MEMORY_PROTECTION)
