@@ -1,0 +1,11 @@
+--- grub-2.14/grub-core/disk/diskfilter.c.orig	2026-09-14 20:58:10.182630096 +0900
++++ grub-2.14/grub-core/disk/diskfilter.c	2026-09-14 20:58:34.845820592 +0900
+@@ -1131,7 +1131,7 @@
+     {
+       /* Strip off the homehost if present.  */
+       char *colon = grub_strchr (name, ':');
+-      char *new_name = grub_xasprintf ("md/%s",
++      char *new_name = grub_xasprintf ("md%s",
+ 				       colon ? colon + 1 : name);
+ 
+       if (! new_name)
