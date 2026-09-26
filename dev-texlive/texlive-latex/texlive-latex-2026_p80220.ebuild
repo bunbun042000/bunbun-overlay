@@ -38,7 +38,7 @@ TEXLIVE_MODULE_CONTENTS="
 	kvdefinekeys.r79461
 	kvoptions.r79461
 	kvsetkeys.r79461
-	l3kernel.r80015
+	l3kernel.r80334
 	l3packages.r76637
 	latex.r79618
 	latex-bin.r80015
@@ -102,7 +102,7 @@ TEXLIVE_MODULE_DOC_CONTENTS="
 	kvdefinekeys.doc.r79461
 	kvoptions.doc.r79461
 	kvsetkeys.doc.r79461
-	l3kernel.doc.r80015
+	l3kernel.doc.r80334
 	l3packages.doc.r76637
 	latex.doc.r79618
 	latex-bin.doc.r80015
@@ -160,7 +160,7 @@ TEXLIVE_MODULE_SRC_CONTENTS="
 	kvdefinekeys.source.r79461
 	kvoptions.source.r79461
 	kvsetkeys.source.r79461
-	l3kernel.source.r80015
+	l3kernel.source.r80334
 	l3packages.source.r76637
 	latex.source.r79618
 	latex-lab.source.r79404
