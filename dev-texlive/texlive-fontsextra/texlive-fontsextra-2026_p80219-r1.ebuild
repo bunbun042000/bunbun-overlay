@@ -330,7 +330,7 @@ TEXLIVE_MODULE_CONTENTS="
 	schulschriften.r59388
 	semaphor.r18651
 	shobhika.r79121
-	simpleicons.r80179
+	simpleicons.r80306
 	skull.r51907
 	sourcecodepro.r79618
 	sourcesans.r79618
@@ -702,7 +702,7 @@ TEXLIVE_MODULE_DOC_CONTENTS="
 	schulschriften.doc.r59388
 	semaphor.doc.r18651
 	shobhika.doc.r79121
-	simpleicons.doc.r80179
+	simpleicons.doc.r80306
 	sourcecodepro.doc.r79618
 	sourcesans.doc.r79618
 	sourceserif.doc.r79618
