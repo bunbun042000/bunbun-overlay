@@ -73,7 +73,7 @@ TEXLIVE_MODULE_CONTENTS="
 	luamaths.r76924
 	luamml.r79442
 	luamodulartables.r68893
-	luamplib.r80198
+	luamplib.r80346
 	luaoptions.r79068
 	luaotfload.r74324
 	luapackageloader.r54779
@@ -196,7 +196,7 @@ TEXLIVE_MODULE_DOC_CONTENTS="
 	luamaths.doc.r76924
 	luamml.doc.r79442
 	luamodulartables.doc.r68893
-	luamplib.doc.r80198
+	luamplib.doc.r80346
 	luaoptions.doc.r79068
 	luaotfload.doc.r74324
 	luapackageloader.doc.r54779
@@ -275,7 +275,7 @@ TEXLIVE_MODULE_SRC_CONTENTS="
 	lualibs.source.r78415
 	luamathalign.source.r77682
 	luamml.source.r79442
-	luamplib.source.r80198
+	luamplib.source.r80346
 	luaotfload.source.r74324
 	luatex85.source.r77682
 	luatexbase.source.r77682
