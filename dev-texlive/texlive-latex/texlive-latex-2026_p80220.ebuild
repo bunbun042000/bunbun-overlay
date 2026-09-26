@@ -50,7 +50,7 @@ TEXLIVE_MODULE_CONTENTS="
 	ltxmisc.r75878
 	lua-uni-algos.r76195
 	mfnfss.r79618
-	mptopdf.r80212
+	mptopdf.r80243
 	natbib.r79618
 	oberdiek.r79461
 	pagesel.r79461
@@ -112,7 +112,7 @@ TEXLIVE_MODULE_DOC_CONTENTS="
 	ltxcmds.doc.r79461
 	lua-uni-algos.doc.r76195
 	mfnfss.doc.r79618
-	mptopdf.doc.r80212
+	mptopdf.doc.r80243
 	natbib.doc.r79618
 	oberdiek.doc.r79461
 	pagesel.doc.r79461
