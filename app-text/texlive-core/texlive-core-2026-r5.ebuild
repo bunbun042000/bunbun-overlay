@@ -1,0 +1,484 @@
+# Copyright 1999-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+EAPI=8
+
+TL_SOURCE_VERSION=20260301
+inherit branding flag-o-matic toolchain-funcs libtool texlive-common
+
+MY_P=${PN%-core}-${TL_SOURCE_VERSION}-source
+
+DESCRIPTION="A complete TeX distribution"
+HOMEPAGE="https://tug.org/texlive/"
+GENTOO_TEX_PATCHES_NUM=6
+SRC_URI="
+	https://mirrors.ctan.org/systems/texlive/Source/${MY_P}.tar.xz
+	https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/${PV}/${MY_P}.tar.xz
+	https://gitweb.gentoo.org/proj/tex-patches.git/snapshot/tex-patches-${GENTOO_TEX_PATCHES_NUM}.tar.bz2
+		-> gentoo-tex-patches-${GENTOO_TEX_PATCHES_NUM}.tar.bz2
+	https://bugs.gentoo.org/attachment.cgi?id=908573
+		-> ${PN}-2023-mplib-h.patch
+"
+
+# Extra macros required while installing other packages.
+TL_CORE_EXTRA_CONTENTS="
+	autosp.r77851
+	axodraw2.r77682
+	chktex.r78219
+	detex.r79618
+	dvi2tty.r66186
+	dvidvi.r75712
+	dviljk.r66186
+	dvipdfmx.r78409
+	dvipos.r66186
+	extractbb.r77855
+	gsftopk.r79618
+	hyphen-base.r78076
+	lacheck.r75712
+	m-tx.r79618
+	makeindex.r75712
+	pmx.r79618
+	texdoctk.r62186
+	texlive-scripts.r80235
+	texlive-scripts-extra.r78162
+	texlive.infra.r79982
+	tpic2pdftex.r75712
+	upmendex.r77845
+	velthuis.r66186
+	vlna.r73908
+	xindy.r79990
+	xml2pmx.r79618
+"
+TL_CORE_EXTRA_DOC_CONTENTS="
+	autosp.doc.r77851
+	axodraw2.doc.r77682
+	chktex.doc.r78219
+	detex.doc.r79618
+	dvi2tty.doc.r66186
+	dvidvi.doc.r75712
+	dviljk.doc.r66186
+	dvipdfmx.doc.r78409
+	dvipos.doc.r66186
+	extractbb.doc.r77855
+	gsftopk.doc.r79618
+	lacheck.doc.r75712
+	m-tx.doc.r79618
+	makeindex.doc.r75712
+	pmx.doc.r79618
+	texdoctk.doc.r62186
+	texlive-scripts.doc.r80384
+	texlive-scripts-extra.doc.r78162
+	texlive.infra.doc.r79982
+	tpic2pdftex.doc.r75712
+	upmendex.doc.r77845
+	velthuis.doc.r66186
+	vlna.doc.r73908
+	xindy.doc.r79990
+	xml2pmx.doc.r79618
+"
+TEXLIVE_MODULE_BINSCRIPTS="
+	texmf-dist/scripts/extractbb/extractbb.lua
+	texmf-dist/scripts/texlive/fmtutil-sys.sh
+	texmf-dist/scripts/texlive/fmtutil-user.sh
+	texmf-dist/scripts/texlive/fmtutil.pl
+	texmf-dist/scripts/texlive/mktexlsr
+	texmf-dist/scripts/texlive/mktexmf
+	texmf-dist/scripts/texlive/mktexpk
+	texmf-dist/scripts/texlive/mktextfm
+	texmf-dist/scripts/texlive/rungs.lua
+	texmf-dist/scripts/texlive/tlmgr.pl
+	texmf-dist/scripts/texlive/updmap-sys.sh
+	texmf-dist/scripts/texlive/updmap-user.sh
+	texmf-dist/scripts/texlive/updmap.pl
+	texmf-dist/scripts/texlive-extra/allcm.sh
+	texmf-dist/scripts/texlive-extra/allneeded.sh
+	texmf-dist/scripts/texlive-extra/dvi2fax.sh
+	texmf-dist/scripts/texlive-extra/dvired.sh
+	texmf-dist/scripts/texlive-extra/e2pall.pl
+	texmf-dist/scripts/texlive-extra/kpsetool.sh
+	texmf-dist/scripts/texlive-extra/kpsewhere.sh
+	texmf-dist/scripts/texlive-extra/ps2frag.sh
+	texmf-dist/scripts/texlive-extra/pslatex.sh
+	texmf-dist/scripts/texlive-extra/texconfig-dialog.sh
+	texmf-dist/scripts/texlive-extra/texconfig-sys.sh
+	texmf-dist/scripts/texlive-extra/texconfig.sh
+	texmf-dist/scripts/texlive-extra/texlinks.sh
+"
+
+TEXLIVE_MODULE_BINLINKS="
+	fmtutil:mktexfmt
+	mktexlsr:texhash
+	allcm:allec
+	kpsetool:kpsexpand
+	kpsetool:kpsepath
+"
+texlive-common_append_to_src_uri TL_CORE_EXTRA_CONTENTS
+
+SRC_URI+=" doc? ( "
+texlive-common_append_to_src_uri TL_CORE_EXTRA_DOC_CONTENTS
+SRC_URI+=" )"
+
+S="${WORKDIR}/${MY_P}"
+LICENSE="BSD CC-BY-SA-4.0 GPL-1+ GPL-2 GPL-2+ GPL-3+ MIT TeX-other-free"
+SLOT="0"
+KEYWORDS="~amd64 ~arm64"
+IUSE="cjk X doc tk +luajittex xetex xindy"
+
+TEXMF_PATH=/usr/share/texmf-dist
+MODULAR_X_DEPEND="
+	X? (
+		x11-libs/libX11
+		x11-libs/libXmu
+	)"
+
+# upTeX calls ptenc_ucs_to_8bit_code, added in ptexenc-1.5.1; GCC 14 rejects
+# the older header's implicit declaration. verified 2026-05-28
+COMMON_DEPEND="
+	${MODULAR_X_DEPEND}
+	sci-libs/mpfi
+	virtual/zlib:=
+	>=media-libs/harfbuzz-1.4.5:=[icu,graphite]
+	>=media-libs/libpng-1.2.43-r2:0=
+	media-libs/gd[png]
+	media-gfx/graphite2:=
+	media-gfx/potrace:=
+	>=x11-libs/cairo-1.12
+	>=x11-libs/pixman-0.18
+	dev-libs/zziplib:=
+	app-text/libpaper:=
+	dev-libs/gmp:=
+	dev-libs/mpfr:=
+	>=dev-libs/ptexenc-1.5.2
+	xetex? (
+		>=app-text/teckit-2.5.10
+		media-libs/fontconfig
+	)
+	xindy? ( dev-lisp/clisp:= )
+	media-libs/freetype:2
+	>=dev-libs/icu-50:=
+	>=dev-libs/kpathsea-6.4.0:=
+"
+
+BDEPEND="
+	sys-apps/ed
+	sys-devel/flex
+	virtual/pkgconfig
+"
+
+DEPEND="
+	${COMMON_DEPEND}
+"
+
+RDEPEND="
+	${COMMON_DEPEND}
+	virtual/perl-Getopt-Long
+	dev-perl/File-HomeDir
+	dev-perl/Log-Dispatch
+	dev-perl/Unicode-LineBreak
+	dev-perl/YAML-Tiny
+	tk? (
+		dev-lang/tk
+		dev-perl/Tk
+	)
+"
+
+BUILDDIR="${WORKDIR}/${P}_build"
+
+RELOC_TARGET=texmf-dist
+
+src_prepare() {
+	mkdir "${BUILDDIR}" || die "failed to create build dir"
+
+	cd "${WORKDIR}" || die
+
+	# From texlive-module.eclass.
+	sed -n -e 's:\s*RELOC/::p' tlpkg/tlpobj/* > "${T}/reloclist" || die
+	sed -e 's/\/[^/]*$//' -e "s:^:${RELOC_TARGET}/:" "${T}/reloclist" |
+		sort -u |
+		xargs mkdir -p || die
+	local i
+	while read -r i; do
+		mv "${i}" "${RELOC_TARGET}/${i%/*}" || die
+	done < "${T}/reloclist"
+	mv "${WORKDIR}"/texmf* "${S}" || die "failed to move texmf files"
+
+	cd "${S}" || die
+
+	TL_KPATHSEA_INCLUDES=$($(tc-getPKG_CONFIG) kpathsea --variable=includedir || die "failed to invoke pkg-config")
+	sed -i \
+		-e "s,/usr/include /usr/local/include.*echo \$KPATHSEA_INCLUDES.*,${TL_KPATHSEA_INCLUDES}\"," \
+		texk/web2c/configure || die
+
+	# Replace the TL2024-context tlmgr patch with its TL2026 equivalent; the
+	# remaining patchset still applies. verified 2026-05-28
+	local patch_dir="${WORKDIR}/tex-patches-${GENTOO_TEX_PATCHES_NUM}"
+	rm "${patch_dir}/fix-perl-include-path-of-tlmgr.patch" || die
+	eapply "${patch_dir}"
+	eapply "${FILESDIR}/texlive-core-2026-tlmgr-include-path.patch"
+
+	# ICU 75 removed underscored UVS_* aliases; use the live camelCase symbols.
+	eapply "${FILESDIR}/texlive-core-icu-uvs-drop-macros.patch"
+
+	default
+
+	elibtoolize
+
+	# Re-run autoconf while the cairo and mplibdir patches remain
+	# (bugs #927714, #853121, #837875).
+	"${S}"/reautoconf libs/cairo || die
+}
+
+src_configure() {
+	# Avoid aliasing and LTO miscompilations (bug #915223; pending upstream).
+	append-flags -fno-strict-aliasing
+	filter-lto
+
+	# GCC 15 compatibility (bug #946142).
+	append-cflags -std=gnu17
+
+	# Silence upstream's temporary 32-bit pdfTeX mismatch (bug #928096).
+	append-cflags -Wno-incompatible-pointer-types
+
+	# Avoid reautoconfing several scripts for bug #966834.
+	append-cxxflags $(test-flags-CXX -std=gnu++17)
+
+	# Required on alpha.
+	use alpha && append-ldflags "-Wl,--no-relax"
+
+	# Regex ranges assume ASCII collation. bug #242430
+	export LC_ALL=C
+
+	# Only pkg-config handles prefixes correctly. bug #690094
+	export ac_cv_prog_ac_ct_FT2_CONFIG=no
+
+	local my_conf=(
+		--bindir="${EPREFIX}"/usr/bin
+		--datadir="${BUILDDIR}"
+		--with-system-freetype2
+		--with-system-zlib
+		--with-system-libpng
+		--with-system-teckit
+		--with-system-kpathsea
+		--with-kpathsea-includes="${TL_KPATHSEA_INCLUDES}"
+		--with-system-icu
+		--with-system-ptexenc
+		--with-system-harfbuzz
+		--with-system-graphite2
+		--with-system-cairo
+		--with-system-pixman
+		--with-system-zziplib
+		--with-system-libpaper
+		--with-system-gmp
+		--with-system-gd
+		--with-system-mpfi
+		--with-system-mpfr
+		--with-system-potrace
+		--disable-multiplatform
+		--enable-chktex
+		--enable-epsfwin
+		--enable-detex
+		--enable-dvi2tty
+		--enable-mftalkwin
+		--enable-regiswin
+		--enable-shared
+		--enable-tektronixwin
+		--enable-unitermwin
+		--enable-vlna
+		--disable-psutils
+		--disable-t1utils
+		--enable-ipc
+		--disable-bibtex-x
+		--disable-dvipng
+		--disable-dvipsk
+		--disable-lcdf-typetools
+		--disable-ps2pk
+		--disable-ttf2pk2
+		--disable-tex4htk
+		--disable-cjkutils
+		--disable-xdvik
+		# xdvipsk requires an in-tree kpathsea header absent from system builds.
+		--disable-xdvipsk
+		--enable-luatex
+		--disable-dvisvgm
+		--disable-ps2eps
+		--disable-static
+		--disable-native-texlive-build
+		--disable-largefile
+		--disable-xindy-docs
+		--disable-xindy-rules
+		--with-banner-add=" ${BRANDING_OS_PRETTY_NAME}"
+		$(use_enable luajittex)
+		$(use_enable luajittex luajithbtex)
+		$(use_enable luajittex mfluajit)
+		$(use_enable xetex)
+		$(use_enable cjk dviout-util)
+		$(use_enable cjk ptex)
+		$(use_enable cjk eptex)
+		$(use_enable cjk uptex)
+		$(use_enable cjk euptex)
+		$(use_enable cjk mendexk)
+		$(use_enable cjk makejvf)
+		$(use_enable cjk pmp)
+		$(use_enable cjk upmp)
+		$(use_enable tk texdoctk)
+		$(use_with X x)
+		$(use_enable xindy)
+		--enable-autosp=yes
+		--enable-axodraw2=yes
+		--enable-devnag=yes
+		--enable-lacheck=yes
+		--enable-m-tx=yes
+		--enable-pmx=yes
+		--enable-tpic2pdftex=yes
+		--with-clisp-runtime=system
+		--enable-xml2pmx=yes
+		$(use_enable X xpdfopen)
+		--enable-web2c=yes
+		--enable-afm2pl=yes
+		--enable-dvidvi=yes
+		--enable-dviljk=yes
+		--enable-dvipdfm-x
+		--enable-dvipos=yes
+		--enable-gregorio=yes
+		--enable-gsftopk=yes
+		--enable-makeindexk=yes
+		--enable-musixtnt=yes
+		--enable-seetexk=yes
+		--enable-ttfdump=yes
+		--enable-upmendex=yes
+		--enable-texlive=yes
+		--enable-linked-scripts=no
+		# web2c afm2pl chktex dtl dvi2tty dvidvi dviljk dviout-util dvipdfm-x gregorio
+	)
+
+	# During bumps, fatal option checking finds removed options but breaks
+	# sub-configures (bug #828591).
+
+	tc-export CC CXX AR RANLIB
+	cd "${BUILDDIR}" || die
+	ECONF_SOURCE="${S}" \
+		econf -C "${my_conf[@]}"
+}
+
+src_compile() {
+	cd "${BUILDDIR}" || die
+	tc-export CC CXX AR RANLIB
+
+	emake AR="$(tc-getAR)" SHELL="${EPREFIX}"/bin/sh texmf="${EPREFIX}"${TEXMF_PATH:-/usr/share/texmf-dist}
+
+	cd "${S}" || die
+	# Mirror updmap --syncwithtrees for installed fonts only.
+	while read -r i; do
+		texlive-common_is_file_present_in_texmf "${i}" || echo "${i}"
+	done > "${T}/updmap_update" < <(grep -E '^(Mixed|Kanji)?Map' "texmf-dist/web2c/updmap.cfg" | sed 's@.* @@')
+	{
+		sed 's@/@\\/@g; s@^@/^MixedMap[     ]*@; s@$@$/s/^/#! /@' <"${T}/updmap_update"
+		sed 's@/@\\/@g; s@^@/^Map[  ]*@; s@$@$/s/^/#! /@' <"${T}/updmap_update"
+		sed 's@/@\\/@g; s@^@/^KanjiMap[     ]*@; s@$@$/s/^/#! /@' <"${T}/updmap_update"
+	} > "${T}/updmap_update2"
+	sed -f "${T}/updmap_update2" "texmf-dist/web2c/updmap.cfg" >	"${T}/updmap_update3"\
+		&& cat "${T}/updmap_update3" > "texmf-dist/web2c/updmap.cfg"
+}
+
+src_test() {
+	cd "${BUILDDIR}" || die
+
+	sed -i \
+		-e 's;uptexdir/nissya.test;;' \
+		-e 's;uptexdir/upbibtex.test;;' \
+		texk/web2c/Makefile || die
+	sed -i \
+		-e 's;dvispc.test;;' \
+		texk/dviout-util/Makefile || die
+	local -x KpsDir="${ESYSROOT}"/usr/bin
+	emake check
+}
+
+src_install() {
+	cd "${BUILDDIR}" || die
+	dodir ${TEXMF_PATH:-/usr/share/texmf-dist}/web2c
+
+	emake DESTDIR="${D}" texmf="${ED}${TEXMF_PATH:-/usr/share/texmf-dist}" run_texlinks="true" run_mktexlsr="true" install
+
+	cd "${S}" || die
+	dodir /usr/share
+	cp -pR texmf-dist "${ED}/usr/share/" || die "failed to install texmf trees"
+	cp -pR "${WORKDIR}"/tlpkg "${ED}/usr/share/" || die "failed to install tlpkg files"
+
+	# Scripts expect mf-nowin even when X-disabled builds provide only mf.
+	use X || dosym mf /usr/bin/mf-nowin
+
+	docinto texk
+	cd "${S}/texk" || die
+	dodoc ChangeLog README
+
+	docinto dviljk
+	cd "${S}/texk/dviljk" || die
+	dodoc ChangeLog README NEWS
+
+	docinto makeindexk
+	cd "${S}/texk/makeindexk" || die
+	dodoc ChangeLog NOTES README
+
+	docinto web2c
+	cd "${S}/texk/web2c" || die
+	dodoc ChangeLog NEWS PROJECTS README
+
+	use doc || rm -rf "${ED}/usr/share/texmf-dist/doc"
+
+	newenvd - 98texlive <<-EOF
+	CONFIG_PROTECT_MASK="/etc/texmf/web2c /etc/texmf/language.dat.d /etc/texmf/language.def.d /etc/texmf/updmap.d"
+	EOF
+
+	keepdir /etc/texmf/web2c
+
+	keepdir /etc/texmf/{updmap.d,language.dat.d,language.def.d,language.dat.lua.d}
+
+	mv "${ED}${TEXMF_PATH}/web2c/updmap.cfg" "${ED}/etc/texmf/updmap.d/00updmap.cfg" || die "moving updmap.cfg failed"
+
+	# texmf-update regenerates this from /etc/texmf/fmtutil.d.
+	rm "${ED}${TEXMF_PATH}/web2c/fmtutil.cnf" || die
+
+	if use cjk; then
+		# Keep only euptex; texlive-langjapanese supplies the ptex/uptex names.
+		# TL2026 may omit the standalone ptex binary.
+		rm -f "${ED}/usr/bin/"{,u}ptex || die
+	fi
+
+	if ! use xindy; then
+		rm -rf "${ED}{TEXMF_PATH}"/{,scripts,doc}/xindy
+		rm "${ED}"/usr/share/tlpkg/tlpobj/xindy.* || die
+	fi
+
+	dobin_texmf_scripts ${TEXLIVE_MODULE_BINSCRIPTS}
+
+	dodir "/usr/bin"
+	for i in ${TEXLIVE_MODULE_BINLINKS} ; do
+		if [[ ! -f ${ED}/usr/bin/${i%:*} ]]; then
+			die "Trying to install an invalid BINLINK ${i%:*}. This should not happen. Please file a bug."
+		fi
+
+		dosym "${i%:*}" "/usr/bin/${i#*:}"
+	done
+
+	texlive-common_handle_config_files
+
+	# Provide missing virtex links; keep them relative for absent staged targets.
+	dosym tex /usr/bin/virtex
+	dosym pdftex /usr/bin/pdfvirtex
+
+	find "${ED}" -name '*.la' -delete || die
+}
+
+pkg_postinst() {
+	# Post-install die cannot roll back a merge, and fmtutil-sys failures occur
+	# here; keep both updates nonfatal. Their intermittent failures need study.
+	nonfatal etexmf-update
+	nonfatal efmtutil-sys
+
+	texlive-common_update_tlpdb
+}
+
+pkg_postrm() {
+	texlive-common_update_tlpdb
+}
