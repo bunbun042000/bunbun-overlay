@@ -63,7 +63,7 @@ TEXLIVE_MODULE_CONTENTS="
 	refcount.r79461
 	rerunfilecheck.r79461
 	stringenc.r79461
-	tagpdf.r80060
+	tagpdf.r80360
 	tools.r79234
 	uniquecounter.r79461
 	url.r77682
@@ -124,7 +124,7 @@ TEXLIVE_MODULE_DOC_CONTENTS="
 	refcount.doc.r79461
 	rerunfilecheck.doc.r79461
 	stringenc.doc.r79461
-	tagpdf.doc.r80060
+	tagpdf.doc.r80360
 	tools.doc.r79234
 	uniquecounter.doc.r79461
 	url.doc.r77682
@@ -179,7 +179,7 @@ TEXLIVE_MODULE_SRC_CONTENTS="
 	refcount.source.r79461
 	rerunfilecheck.source.r79461
 	stringenc.source.r79461
-	tagpdf.source.r80060
+	tagpdf.source.r80360
 	tools.source.r79234
 	uniquecounter.source.r79461
 "
